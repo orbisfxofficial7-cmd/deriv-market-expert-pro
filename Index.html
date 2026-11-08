@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <title>Deriv Market Expert Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1>DERIV MARKET EXPERT PRO</h1>
+    <p>Professional Market Analysis Dashboard</p>
+    <span id="connection-status">Connecting...</span>
+  </header>
+
+  <main class="dashboard">
+
+    <section class="panel">
+      <h2>Market Selection</h2>
+      <select id="market">
+        <option value="R_10">Volatility 10 Index</option>
+        <option value="R_25">Volatility 25 Index</option>
+        <option value="R_50">Volatility 50 Index</option>
+        <option value="R_75">Volatility 75 Index</option>
+        <option value="R_100">Volatility 100 Index</option>
+      </select>
+      <h3>Live Market Price</h3>
+      <div id="live-price">Waiting for live data...</div>
+    </section>
+
+    <section class="panel">
+      <h2>Multi-Timeframe Analysis</h2>
+      <div class="timeframes">
+        <div>1 Minute <strong id="m1">WAIT</strong></div>
+        <div>5 Minutes <strong id="m5">WAIT</strong></div>
+        <div>15 Minutes <strong id="m15">WAIT</strong></div>
+        <div>1 Hour <strong id="h1">WAIT</strong></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Matches & Differences</h2>
+      <p>Timeframe agreement: <strong id="matches">Waiting</strong></p>
+      <p>Conflicting signals: <strong id="differences">Waiting</strong></p>
+    </section>
+
+    <section class="panel">
+      <h2>Market Structure</h2>
+      <p>BOS: <span id="bos">Waiting</span></p>
+      <p>CHoCH: <span id="choch">Waiting</span></p>
+      <p>Liquidity: <span id="liquidity">Waiting</span></p>
+      <p>Displacement: <span id="displacement">Waiting</span></p>
+    </section>
+
+    <section class="panel signal-panel">
+      <h2>Market Expert Decision</h2>
+      <div id="signal">WAIT</div>
+      <p id="signal-reason">Waiting for sufficient market evidence.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Trade Planning</h2>
+      <p>Entry: <span id="entry">—</span></p>
+      <p>Stop Loss: <span id="stop-loss">—</span></p>
+      <p>Take Profit: <span id="take-profit">—</span></p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Deriv Market Expert Pro | Analysis tool, not financial advice.</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="deriv.js"></script>
+  <script src="analysis.js"></script>
+  <script src="app.js"></script>
+
+</body>
+  </html>
+  
