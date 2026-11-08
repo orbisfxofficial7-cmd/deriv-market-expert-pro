@@ -1,0 +1,121 @@
+const APP_NAME = "Deriv Market Expert Pro";
+
+const state = {
+    connected: false,
+    symbol: "R_100",
+    price: null,
+    previousPrice: null,
+    history: [],
+    timeframe: "1m"
+};
+
+const symbols = [
+    "R_10",
+    "R_25",
+    "R_50",
+    "R_75",
+    "R_100"
+];
+
+function analyzeMarket(prices) {
+    if (prices.length < 20) {
+        return {
+            trend: "WAIT",
+            strength: "Insufficient data"
+        };
+    }
+
+    const recent = prices.slice(-10);
+    const previous = prices.slice(-20, -10);
+
+    const recentAverage =
+        recent.reduce((a, b) => a + b, 0) / recent.length;
+
+    const previousAverage =
+        previous.reduce((a, b) => a + b, 0) / previous.length;
+
+    if (recentAverage > previousAverage) {
+        return { trend: "BULLISH", strength: "Upward momentum" };
+    }
+
+    if (recentAverage < previousAverage) {
+        return { trend: "BEARISH", strength: "Downward momentum" };
+    }
+
+    return { trend: "WAIT", strength: "No clear direction" };
+}
+
+function updatePrice(price) {
+    state.previousPrice = state.price;
+    state.price = Number(price);
+
+    state.history.push(state.price);
+
+    if (state.history.length > 200) {
+        state.history.shift();
+    }
+
+    renderMarket();
+}
+
+function renderMarket() {
+    const priceElement = document.getElementById("price");
+    const signalElement = document.getElementById("signal");
+
+    if (priceElement) {
+        priceElement.textContent =
+            state.price === null ? "--" : state.price.toFixed(4);
+    }
+
+    const analysis = analyzeMarket(state.history);
+
+    if (signalElement) {
+        signalElement.textContent = analysis.trend;
+    }
+}
+
+function connectDeriv() {
+    const appId = document.getElementById("app-id")?.value.trim();
+
+    if (!appId) {
+        alert("Enter your Deriv App ID first.");
+        return;
+    }
+
+    const socket = new WebSocket(
+        `wss://ws.derivws.com/websockets/v3?app_id=${encodeURIComponent(appId)}`
+    );
+
+    socket.onopen = () => {
+        state.connected = true;
+
+        socket.send(JSON.stringify({
+            ticks: state.symbol,
+            subscribe: 1
+        }));
+    };
+
+    socket.onmessage = (event) => {
+        const response = JSON.parse(event.data);
+
+        if (response.tick) {
+            updatePrice(response.tick.quote);
+        }
+
+        if (response.error) {
+            console.error(response.error.message);
+        }
+    };
+
+    socket.onclose = () => {
+        state.connected = false;
+    };
+
+    socket.onerror = (error) => {
+        console.error("Deriv connection error:", error);
+    };
+
+    state.socket = socket;
+}
+
+console.log(APP_NAME + " initialized.");
